@@ -1,28 +1,22 @@
 import React from 'react';
 import { Form } from 'react-final-form';
-import * as yup from 'yup';
-import { TextField, Checkboxes, Radios, Select, DatePicker, TimePicker } from 'mui-rff';
-import { MenuItem, Typography, Link, Grid, Button, CssBaseline } from '@mui/material';
-import { Paper, Container } from './styles';
-
+import { Checkboxes, Radios, Select, DatePicker, TimePicker, TextField } from 'mui-rff';
+import { MenuItem, Grid, Button, CssBaseline } from '@mui/material';
+import { Paper, Container, useStyles } from './styles';
+import { OptionalTextField } from './components/OptionalTextField';
 import DateFnsUtils from '@date-io/date-fns';
-import { validateFormValues } from '../../helpers/yupWithFinalForm';
+import { validate } from './validation';
 
 const onSubmit = async (values) => {
-  alert(JSON.stringify(values, 0, 2));
+  alert(JSON.stringify(prepareData(values), 0, 2));
 };
 
-const validationSchema = yup.object({
-  firstName: yup.string().required('Required'),
-});
-
-const validate = validateFormValues(validationSchema);
+const prepareData = (data) => {
+  const filtered = Object.entries(data).filter((item) => !item[0].includes('_isRequired'));
+  return Object.fromEntries(filtered);
+};
 
 const formFields = [
-  {
-    size: 6,
-    field: <TextField label="First Name" name="firstName" margin="none" required={true} />,
-  },
   {
     size: 6,
     field: <TextField label="Last Name" name="lastName" margin="none" required={true} />,
@@ -106,12 +100,12 @@ const formFields = [
 ];
 
 export function NewUserForm() {
+  const classes = useStyles();
   return (
     <Container>
       <CssBaseline />
       <Form
         onSubmit={onSubmit}
-        // initialValues={{ firstName: '', lastName: '', email: '' }}
         validate={validate}
         render={({ handleSubmit, submitting, pristine, values, form }) => (
           <form
@@ -125,31 +119,49 @@ export function NewUserForm() {
                 : handleSubmit(event);
             }}
           >
-            <Paper style={{ padding: 16 }}>
-              <Grid container alignItems="flex-start" spacing={2}>
-                {formFields.map((item, idx) => (
-                  <Grid item xs={item.size} key={idx}>
-                    {item.field}
-                  </Grid>
-                ))}
-                <Grid item style={{ marginTop: 16 }}>
-                  <Button
-                    type="button"
-                    variant="contained"
-                    onClick={() => form.restart()}
-                    disabled={submitting || pristine}
-                  >
-                    Reset
-                  </Button>
+            <Paper>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    className={classes.root}
+                    variant="standard"
+                    label="Прізвище"
+                    name="secondName"
+                    required
+                  />
                 </Grid>
-                <Grid item style={{ marginTop: 16 }}>
-                  <Button variant="contained" color="primary" type="submit" disabled={submitting}>
-                    Submit
-                  </Button>
+
+                <Grid item xs={4}>
+                  <TextField
+                    className={classes.root}
+                    variant="standard"
+                    label="Ім'я"
+                    name="firstName"
+                    required
+                  />
+                </Grid>
+
+                <Grid item xs={4}>
+                  <OptionalTextField name="middleName" />
                 </Grid>
               </Grid>
+              <Grid item xs={4} style={{ marginTop: 16 }}>
+                <Button
+                  type="button"
+                  variant="contained"
+                  onClick={() => form.restart()}
+                  disabled={submitting || pristine}
+                >
+                  Reset
+                </Button>
+              </Grid>
+              <Grid item style={{ marginTop: 16 }}>
+                <Button variant="contained" color="primary" type="submit" disabled={submitting}>
+                  Submit
+                </Button>
+              </Grid>
             </Paper>
-            <pre>{JSON.stringify(values, 0, 2)}</pre>
+            <pre>{JSON.stringify(prepareData(values), 0, 2)}</pre>
           </form>
         )}
       />
