@@ -1,11 +1,11 @@
 import React from 'react';
-import { NewUserPage } from './pages/NewUserPage/index';
+import { NewUserPage } from '../NewUserPage/index';
 
 function App() {
   return (
-    <div className="App">
+    <>
       <NewUserPage />
-    </div>
+    </>
   );
 }
 

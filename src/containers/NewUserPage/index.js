@@ -1,19 +1,14 @@
 import React from 'react';
 import { Form } from 'react-final-form';
-import { Checkboxes, Radios, Select, DatePicker, TimePicker, TextField } from 'mui-rff';
+import { Checkboxes, Radios, Select, DatePicker, TimePicker } from 'mui-rff';
 import { MenuItem, Grid, Button, CssBaseline } from '@mui/material';
 import { Paper, Container, useStyles } from './styles';
-import { OptionalTextField } from './components/OptionalTextField';
+import { TextField } from './components/TextField';
 import DateFnsUtils from '@date-io/date-fns';
 import { useUserValidation } from './validation';
 
 const onSubmit = async (values) => {
-  alert(JSON.stringify(prepareData(values), 0, 2));
-};
-
-const prepareData = (data) => {
-  const filtered = Object.entries(data).filter((item) => !item[0].includes('_isRequired'));
-  return Object.fromEntries(filtered);
+  alert(JSON.stringify(values, 0, 2));
 };
 
 const formFields = [
@@ -102,11 +97,6 @@ const formFields = [
 export function NewUserPage() {
   const classes = useStyles();
   const validate = useUserValidation();
-  // const { pageValue: tabs, setPageValue: setListTabs } = useLocalStorage({
-  //   key: 'LIST_TABS',
-  //   defaultValue: [],
-  // });
-
   return (
     <Container>
       <CssBaseline />
@@ -148,7 +138,14 @@ export function NewUserPage() {
                 </Grid>
 
                 <Grid item xs={4}>
-                  <OptionalTextField name="middleName" />
+                  <TextField
+                    className={classes.root}
+                    variant="standard"
+                    label="Ім'я"
+                    optional
+                    name="middleName"
+                    required
+                  />
                 </Grid>
               </Grid>
               <Grid item xs={4} style={{ marginTop: 16 }}>
@@ -167,7 +164,7 @@ export function NewUserPage() {
                 </Button>
               </Grid>
             </Paper>
-            <pre>{JSON.stringify(prepareData(values), 0, 2)}</pre>
+            <pre>{JSON.stringify(values, 0, 2)}</pre>
           </form>
         )}
       />

@@ -57,13 +57,3 @@ export const useLocalStorage = ({ key, defaultValue }) => {
 
     return {pageValue, setPageValue}
 }
-
-
-// example of usage //
-
-//   const { pageValue: tabs, setPageValue: setListTabs } = useLocalStorage({
-//     key: "LIST_TABS",
-//     defaultValue: [],
-//   });
-
-// example of usage //
