@@ -5,6 +5,7 @@ import {
   FIELD_IS_REQUIRED,
   NUMBERS_NOT_ALLOWED,
   TO_SHORT,
+  RNOKPP_ERROR,
 } from '../../constants/validationConstants';
 
 export const useUserValidation = () => {
@@ -25,30 +26,31 @@ export const useUserValidation = () => {
     }
   };
 
-  const NUMBERS = /^[a-zA-Z-а-яА-Я']*$/;
+  const NO_NUMBERS = /^[a-zA-Z-а-яА-Я']*$/;
 
   const validationSchema = yup.object({
-    secondName: yup
-      .string()
-      .required(FIELD_IS_REQUIRED)
-      .matches(NUMBERS, NUMBERS_NOT_ALLOWED)
-      .min(2, TO_SHORT),
-    firstName: yup
-      .string()
-      .required(FIELD_IS_REQUIRED)
-      .matches(NUMBERS, NUMBERS_NOT_ALLOWED)
-      .min(2, TO_SHORT),
-    middleName: yup
-      .string()
-      .when([], {
-        is: () => newUserFormRequireds.middleName,
-        then: yup.string().required(FIELD_IS_REQUIRED),
-        otherwise: yup.string().notRequired(),
-      })
-      .matches(NUMBERS, NUMBERS_NOT_ALLOWED)
-      .min(2, TO_SHORT),
+    secondName: yup.string().required(FIELD_IS_REQUIRED).min(2, TO_SHORT),
+    firstName: yup.string().required(FIELD_IS_REQUIRED).min(2, TO_SHORT),
+    middleName: yup.string().when([], {
+      is: () => newUserFormRequireds.middleName,
+      then: yup.string().required(FIELD_IS_REQUIRED).min(2, TO_SHORT),
+      otherwise: yup.string().notRequired(),
+    }),
+    taxpayerCard: yup.string().when([], {
+      is: () => newUserFormRequireds.taxpayerCard,
+      then: yup.string().required(FIELD_IS_REQUIRED).min(10, RNOKPP_ERROR),
+      otherwise: yup.string().notRequired(),
+    }),
   });
   const validate = validateFormValues(validationSchema);
 
   return validate;
 };
+
+export const onlyNumbers = (value) => value.replace(/\D/gi, '');
+export const onlyLetters = (value) =>
+  value
+    .toLowerCase()
+    .replace(/[0-9]/g, '')
+    .replace(/[^a-zA-Zа-яА_Я0-9 ]/gi, '')
+    .replace(/^(.)|\s+(.)/g, (c) => c.toUpperCase());

@@ -18,4 +18,13 @@ export const Container = styled.div`
 
 export const Paper = styled(MPaper)`
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+`;
+
+export const ButtonBox = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
 `;

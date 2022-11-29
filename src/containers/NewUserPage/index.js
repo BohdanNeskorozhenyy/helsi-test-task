@@ -1,98 +1,15 @@
 import React from 'react';
-import { Form } from 'react-final-form';
+import { Form, Field } from 'react-final-form';
 import { Checkboxes, Radios, Select, DatePicker, TimePicker } from 'mui-rff';
 import { MenuItem, Grid, Button, CssBaseline } from '@mui/material';
-import { Paper, Container, useStyles } from './styles';
+import { Paper, Container, useStyles, ButtonBox } from './styles';
 import { TextField } from './components/TextField';
-import DateFnsUtils from '@date-io/date-fns';
 import { useUserValidation } from './validation';
+import { onlyNumbers, onlyLetters } from './validation';
 
 const onSubmit = async (values) => {
   alert(JSON.stringify(values, 0, 2));
 };
-
-const formFields = [
-  {
-    size: 6,
-    field: <TextField label="Last Name" name="lastName" margin="none" required={true} />,
-  },
-  {
-    size: 12,
-    field: <TextField type="email" label="Email" name="email" margin="none" required={true} />,
-  },
-  {
-    size: 12,
-    field: (
-      <Checkboxes
-        name="employed"
-        formControlProps={{ margin: 'none' }}
-        data={{ label: 'Employed', value: true }}
-      />
-    ),
-  },
-  {
-    size: 12,
-    field: (
-      <Radios
-        label="Best Stooge"
-        name="stooge"
-        formControlProps={{ margin: 'none' }}
-        radioGroupProps={{ row: true }}
-        data={[
-          { label: 'Larry', value: 'larry' },
-          { label: 'Moe', value: 'moe' },
-          { label: 'Curly', value: 'curly' },
-        ]}
-      />
-    ),
-  },
-  {
-    size: 12,
-    field: (
-      <Checkboxes
-        label="Sauces"
-        name="sauces"
-        formControlProps={{ margin: 'none' }}
-        formGroupProps={{ row: true }}
-        data={[
-          { label: 'Ketchup', value: 'ketchup' },
-          { label: 'Mustard', value: 'mustard' },
-          { label: 'Salsa', value: 'salsa' },
-          { label: 'Guacamole 🥑', value: 'guacamole' },
-        ]}
-      />
-    ),
-  },
-  {
-    size: 12,
-    field: <TextField name="notes" multiline label="Notes" margin="none" />,
-  },
-  {
-    size: 12,
-    field: (
-      <Select name="city" label="Select a City" formControlProps={{ margin: 'none' }}>
-        <MenuItem value="London">London</MenuItem>
-        <MenuItem value="Paris">Paris</MenuItem>
-        <MenuItem value="Budapest">A city with a very long Name</MenuItem>
-      </Select>
-    ),
-  },
-  {
-    size: 6,
-    field: (
-      <DatePicker
-        name="rendez-vous"
-        margin="normal"
-        label="Rendez-vous"
-        dateFunsUtils={DateFnsUtils}
-      />
-    ),
-  },
-  {
-    size: 6,
-    field: <TimePicker name="alarm" margin="normal" label="Alarm" dateFunsUtils={DateFnsUtils} />,
-  },
-];
 
 export function NewUserPage() {
   const classes = useStyles();
@@ -103,70 +20,114 @@ export function NewUserPage() {
       <Form
         onSubmit={onSubmit}
         validate={validate}
-        render={({ handleSubmit, submitting, pristine, values, form }) => (
-          <form
-            noValidate
-            onSubmit={(event) => {
-              const isValid = form.getState().valid;
-              isValid
-                ? handleSubmit(event).then(() => {
-                    form.restart();
-                  })
-                : handleSubmit(event);
-            }}
-          >
-            <Paper>
-              <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  <TextField
-                    className={classes.root}
-                    variant="standard"
-                    label="Прізвище"
-                    name="secondName"
-                    required
-                  />
-                </Grid>
+        render={({ handleSubmit, submitting, pristine, values, form }) => {
+          return (
+            <form
+              noValidate
+              onSubmit={(event) => {
+                const isValid = form.getState().valid;
+                isValid
+                  ? handleSubmit(event).then(() => {
+                      form.restart();
+                    })
+                  : handleSubmit(event);
+              }}
+            >
+              <Paper>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                    <TextField
+                      className={classes.root}
+                      variant="standard"
+                      label="Прізвище"
+                      name="secondName"
+                      parse={onlyLetters}
+                      required
+                    />
+                  </Grid>
 
-                <Grid item xs={4}>
-                  <TextField
-                    className={classes.root}
-                    variant="standard"
-                    label="Ім'я"
-                    name="firstName"
-                    required
-                  />
-                </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      className={classes.root}
+                      variant="standard"
+                      label="Ім'я"
+                      name="firstName"
+                      parse={onlyLetters}
+                      required
+                    />
+                  </Grid>
 
-                <Grid item xs={4}>
-                  <TextField
-                    className={classes.root}
-                    variant="standard"
-                    label="Ім'я"
-                    optional
-                    name="middleName"
-                    required
-                  />
+                  <Grid item xs={4}>
+                    <TextField
+                      className={classes.root}
+                      variant="standard"
+                      label="По батькові"
+                      optional
+                      helperText="Немає по батькові згідно документів"
+                      name="middleName"
+                      required
+                      parse={onlyLetters}
+                      form={form}
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Grid item xs={4} style={{ marginTop: 16 }}>
-                <Button
-                  type="button"
-                  variant="contained"
-                  onClick={() => form.restart()}
-                  disabled={submitting || pristine}
-                >
-                  Reset
-                </Button>
-              </Grid>
-              <Grid item style={{ marginTop: 16 }}>
-                <Button variant="contained" color="primary" type="submit" disabled={submitting}>
-                  Submit
-                </Button>
-              </Grid>
-            </Paper>
-            <pre>{JSON.stringify(values, 0, 2)}</pre>
-          </form>
-        )}
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                    <TextField
+                      className={classes.root}
+                      variant="standard"
+                      label="РНОКПП (ІПН)"
+                      name="taxpayerCard"
+                      helperText="Немає ІПН за віком чи має відмітку у паспорті"
+                      required
+                      maxLength={10}
+                      parse={onlyNumbers}
+                      optional
+                      form={form}
+                    />
+                  </Grid>
+
+                  {/* <Grid item xs={4}>
+                    <TextField
+                      className={classes.root}
+                      variant="standard"
+                      label="Ім'я"
+                      name="firstName"
+                      required
+                    />
+                  </Grid>
+
+                  <Grid item xs={4}>
+                    <TextField
+                      className={classes.root}
+                      variant="standard"
+                      label="По батькові"
+                      optional
+                      form={form}
+                      helperText="Немає по батькові згідно документів"
+                      name="middleName"
+                      required
+                    />
+                  </Grid> */}
+                </Grid>
+                <ButtonBox>
+                  <Button
+                    type="button"
+                    variant="contained"
+                    onClick={() => form.restart()}
+                    disabled={submitting || pristine}
+                  >
+                    Reset
+                  </Button>
+                  <Button variant="contained" color="primary" type="submit" disabled={submitting}>
+                    Submit
+                  </Button>
+                </ButtonBox>
+              </Paper>
+              <pre>{JSON.stringify(values, 0, 2)}</pre>
+            </form>
+          );
+        }}
       />
     </Container>
   );
