@@ -5,7 +5,7 @@ import { MenuItem, Grid, Button, CssBaseline } from '@mui/material';
 import { Paper, Container, useStyles } from './styles';
 import { OptionalTextField } from './components/OptionalTextField';
 import DateFnsUtils from '@date-io/date-fns';
-import { validate } from './validation';
+import { useUserValidation } from './validation';
 
 const onSubmit = async (values) => {
   alert(JSON.stringify(prepareData(values), 0, 2));
@@ -99,8 +99,14 @@ const formFields = [
   },
 ];
 
-export function NewUserForm() {
+export function NewUserPage() {
   const classes = useStyles();
+  const validate = useUserValidation();
+  // const { pageValue: tabs, setPageValue: setListTabs } = useLocalStorage({
+  //   key: 'LIST_TABS',
+  //   defaultValue: [],
+  // });
+
   return (
     <Container>
       <CssBaseline />

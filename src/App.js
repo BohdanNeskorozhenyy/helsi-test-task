@@ -1,10 +1,10 @@
 import React from 'react';
-import { NewUserForm } from './components/NewUserForm/index';
+import { NewUserPage } from './pages/NewUserPage/index';
 
 function App() {
   return (
     <div className="App">
-      <NewUserForm />
+      <NewUserPage />
     </div>
   );
 }
