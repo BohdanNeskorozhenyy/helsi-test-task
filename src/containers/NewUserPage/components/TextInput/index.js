@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Switch from '@mui/material/Switch';
-import { useStyles, Container, Absolute } from './styles';
-import { TextField as MTextField } from 'mui-rff';
-
+import { useStyles, Container, Absolute, Wraper } from './styles';
+import { TextField } from 'mui-rff';
+import { makeStyles } from '@material-ui/styles';
 import { Field } from 'react-final-form';
 import { useLocalStorage } from '../../../../lib/hooks/useLocalStorage';
 import { MdInfoOutline } from 'react-icons/md';
 
-export const TextField = ({ maxLength, form, name, optional, helperText, parse, ...rest }) => {
+export const TextInput = ({ maxLength, form, name, optional, helperText, parse, ...rest }) => {
   const classes = useStyles();
+
   const { pageValue: newUserFormRequireds, setPageValue: setNewUserFormRequireds } =
     useLocalStorage({
       key: 'NEW_USER_FORM_REQUIREDS',
       defaultValue: {},
     });
+
   const [required, setRequired] = useState(newUserFormRequireds[name]);
 
   useEffect(() => {
@@ -34,8 +36,9 @@ export const TextField = ({ maxLength, form, name, optional, helperText, parse, 
       <Field parse={parse} name={name}>
         {({ input, meta }) => {
           return (
-            <>
-              <MTextField
+            <Wraper optional={optional}>
+              <TextField
+                className={classes.root}
                 disabled={isDispabled}
                 helperText={isDispabled && helperText}
                 inputProps={{ maxLength }}
@@ -43,12 +46,12 @@ export const TextField = ({ maxLength, form, name, optional, helperText, parse, 
                 {...input}
               />
               <Absolute>
-                {meta.touched && !meta.valid && <MdInfoOutline />}
+                {!optional && meta.touched && !meta.valid && <MdInfoOutline />}
                 {optional && (
                   <Switch checked={required} onChange={onChange} className={classes.root} />
                 )}
               </Absolute>
-            </>
+            </Wraper>
           );
         }}
       </Field>

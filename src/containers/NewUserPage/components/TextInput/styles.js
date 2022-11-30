@@ -27,9 +27,12 @@ export const useStyles = makeStyles({
 
 export const Container = styled.div`
   position: relative;
+`;
+
+export const Wraper = styled.div`
   input {
     padding: 10px 0;
-    padding-right: 90px;
+    padding-right: ${(props) => (props.optional ? '55px' : '0')};
   }
 `;
 

@@ -1,14 +1,5 @@
 import styled from 'styled-components';
-import { makeStyles } from '@material-ui/styles';
 import { Paper as MPaper } from '@mui/material';
-
-export const useStyles = makeStyles({
-  root: {
-    '& .MuiFormLabel-root.MuiInputLabel-root': {
-      transform: 'scale(0.75)',
-    },
-  },
-});
 
 export const Container = styled.div`
   margin: auto;

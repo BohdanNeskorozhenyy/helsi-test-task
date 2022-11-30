@@ -1,12 +1,7 @@
 import * as yup from 'yup';
 import { setIn } from 'final-form';
 import { useLocalStorage } from '../../lib/hooks/useLocalStorage';
-import {
-  FIELD_IS_REQUIRED,
-  NUMBERS_NOT_ALLOWED,
-  TO_SHORT,
-  RNOKPP_ERROR,
-} from '../../constants/validationConstants';
+import { FIELD_IS_REQUIRED, TO_SHORT, RNOKPP_ERROR } from '../../constants/validationConstants';
 
 export const useUserValidation = () => {
   const { pageValue: newUserFormRequireds } = useLocalStorage({
@@ -26,8 +21,6 @@ export const useUserValidation = () => {
     }
   };
 
-  const NO_NUMBERS = /^[a-zA-Z-а-яА-Я']*$/;
-
   const validationSchema = yup.object({
     secondName: yup.string().required(FIELD_IS_REQUIRED).min(2, TO_SHORT),
     firstName: yup.string().required(FIELD_IS_REQUIRED).min(2, TO_SHORT),
@@ -41,6 +34,7 @@ export const useUserValidation = () => {
       then: yup.string().required(FIELD_IS_REQUIRED).min(10, RNOKPP_ERROR),
       otherwise: yup.string().notRequired(),
     }),
+    dateOfBirth: yup.date().required(FIELD_IS_REQUIRED),
   });
   const validate = validateFormValues(validationSchema);
 
