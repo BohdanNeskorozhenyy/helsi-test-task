@@ -6,11 +6,11 @@ import Typography from '@mui/material/Typography';
 
 import { Paper, Container, ButtonBox, Inner, Header, BackButton } from './styles';
 import { MdKeyboardBackspace } from 'react-icons/md';
-import TextInput from './components/TextInput';
-import DateInput from './components/DateInput';
-import SelectInput from './components/SelectInput';
+import TextInput from './components/text-input';
+import DateInput from './components/date-input';
+import SelectInput from './components/select-input';
 import { useUserValidation } from './validation';
-import PhoneInput from './components/PhoneInput';
+import PhoneInput from './components/phone-input';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, ukUA } from '@mui/x-date-pickers';
@@ -230,7 +230,16 @@ export function NewUserPage() {
                               ? onlyNumbers
                               : (e) => e
                           }
-                          maxLength={parentKeys.documentType === documentTypes[2].name ? 8 : 9}
+                          maxLength={(() => {
+                            switch (parentKeys.documentType) {
+                              case documentTypes[2].name:
+                                return 9;
+                              case documentTypes[3].name:
+                                return 8;
+                              default:
+                                return 16;
+                            }
+                          })()}
                         />
                       </Grid>
                     </Grid>

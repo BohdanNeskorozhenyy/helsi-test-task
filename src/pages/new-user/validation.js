@@ -8,6 +8,7 @@ import {
   NUMBER_ERROR,
   BOOK_PASSWORD_ERROR,
   EMAIL_ERROR,
+  ATHER_DOCS_ERROR,
 } from '../../constants/validation-messages';
 import { documentTypes } from './constants';
 
@@ -63,9 +64,12 @@ export const useUserValidation = () => {
           return yup
             .string()
             .required(FIELD_IS_REQUIRED)
-            .matches(/[A-Z]{2}[0-9]{6}|[А-Я]{2}[0-9]{6}/, BOOK_PASSWORD_ERROR);
+            .matches(/[A-ZА-Я]{2}[0-9]{6}/, BOOK_PASSWORD_ERROR);
         default:
-          return yup.string().required(FIELD_IS_REQUIRED).min(9, TO_SHORT(9));
+          return yup
+            .string()
+            .required(FIELD_IS_REQUIRED)
+            .matches(/[a-zA-Zа-яА-Я]{2,6}[0-9]{3,10}/, ATHER_DOCS_ERROR);
       }
     }),
     whoIssued: yup.string().required(FIELD_IS_REQUIRED).min(10, TO_SHORT(10)),
