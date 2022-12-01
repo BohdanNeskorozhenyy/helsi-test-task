@@ -6,7 +6,16 @@ import { Field } from 'react-final-form';
 import { useLocalStorage } from '../../../../lib/hooks/useLocalStorage';
 import { MdInfoOutline } from 'react-icons/md';
 
-const TextInput = ({ maxLength, form, name, optional, parentKeys, helperText, parse, ...rest }) => {
+const TextInput = ({
+  maxLength,
+  resetInput,
+  name,
+  optional,
+  parentKeys,
+  helperText,
+  parse,
+  ...rest
+}) => {
   const classes = useStyles();
   const inputRef = useRef();
 
@@ -25,7 +34,7 @@ const TextInput = ({ maxLength, form, name, optional, parentKeys, helperText, pa
       ...newUserFormRequireds,
       [name]: required,
     });
-    inputRef.current.value && form.change(name, '');
+    inputRef.current.value && resetInput(name, '');
   }, [required]);
 
   const onChange = () => {

@@ -103,7 +103,7 @@ export function NewUserPage() {
                           name="middleName"
                           required
                           parse={onlyLettersFirsUppercase}
-                          form={form}
+                          resetInput={form.change}
                         />
                       </Grid>
                     </Grid>
@@ -118,7 +118,7 @@ export function NewUserPage() {
                           maxLength={10}
                           parse={onlyNumbers}
                           optional
-                          form={form}
+                          resetInput={form.change}
                         />
                       </Grid>
                       <Grid item xs={4}>
