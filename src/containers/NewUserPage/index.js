@@ -2,8 +2,10 @@ import React, { useEffect } from 'react';
 
 import { Form } from 'react-final-form';
 import { Grid, Button } from '@mui/material';
-import { Paper, Container, ButtonBox } from './styles';
+import Typography from '@mui/material/Typography';
 
+import { Paper, Container, ButtonBox, Inner, Header, BackButton } from './styles';
+import { MdKeyboardBackspace } from 'react-icons/md';
 import TextInput from './components/TextInput';
 import DateInput from './components/DateInput';
 import SelectInput from './components/SelectInput';
@@ -60,214 +62,231 @@ export function NewUserPage() {
                     : handleSubmit(event);
                 }}
               >
-                <Paper>
-                  <Grid container spacing={2}>
-                    <Grid item xs={4}>
-                      <TextInput
-                        variant="standard"
-                        label="Прізвище"
-                        name="secondName"
-                        parse={onlyLettersFirsUppercase}
-                        required
-                      />
-                    </Grid>
+                <Header>
+                  <BackButton type='button'>
+                    <MdKeyboardBackspace />
+                  </BackButton>
+                  <Typography variant="h5">Створення персони</Typography>
+                </Header>
+                <Paper sx={{ gap: '0px' }}>
+                  <Typography pb="10px" variant="h5">
+                    Дані пацієнта
+                  </Typography>
+                  <Inner>
+                    <Grid container spacing={2}>
+                      <Grid item xs={4}>
+                        <TextInput
+                          variant="standard"
+                          label="Прізвище"
+                          name="secondName"
+                          parse={onlyLettersFirsUppercase}
+                          required
+                        />
+                      </Grid>
 
-                    <Grid item xs={4}>
-                      <TextInput
-                        variant="standard"
-                        label="Ім'я"
-                        name="firstName"
-                        parse={onlyLettersFirsUppercase}
-                        required
-                      />
-                    </Grid>
+                      <Grid item xs={4}>
+                        <TextInput
+                          variant="standard"
+                          label="Ім'я"
+                          name="firstName"
+                          parse={onlyLettersFirsUppercase}
+                          required
+                        />
+                      </Grid>
 
-                    <Grid item xs={4}>
-                      <TextInput
-                        variant="standard"
-                        label="По батькові"
-                        optional
-                        helperText="Немає по батькові згідно документів"
-                        name="middleName"
-                        required
-                        parse={onlyLettersFirsUppercase}
-                        form={form}
-                      />
+                      <Grid item xs={4}>
+                        <TextInput
+                          variant="standard"
+                          label="По батькові"
+                          optional
+                          helperText="Немає по батькові згідно документів"
+                          name="middleName"
+                          required
+                          parse={onlyLettersFirsUppercase}
+                          form={form}
+                        />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={4}>
-                      <TextInput
-                        variant="standard"
-                        label="РНОКПП (ІПН)"
-                        name="taxpayerCard"
-                        helperText="Немає ІПН за віком чи має відмітку у паспорті"
-                        required
-                        maxLength={10}
-                        parse={onlyNumbers}
-                        optional
-                        form={form}
-                      />
+                    <Grid container spacing={2}>
+                      <Grid item xs={4}>
+                        <TextInput
+                          variant="standard"
+                          label="РНОКПП (ІПН)"
+                          name="taxpayerCard"
+                          helperText="Немає ІПН за віком чи має відмітку у паспорті"
+                          required
+                          maxLength={10}
+                          parse={onlyNumbers}
+                          optional
+                          form={form}
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <DateInput
+                          name="dateOfBirth"
+                          label="Дата народження"
+                          shouldDisableDate={(day) => day.getTime() > TODAY}
+                          variant="standard"
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <SelectInput
+                          items={sexOfUser}
+                          name="sexOfUser"
+                          variant="standard"
+                          label="Cтать"
+                          values={values}
+                          required
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={4}>
-                      <DateInput
-                        name="dateOfBirth"
-                        label="Дата народження"
-                        shouldDisableDate={(day) => day.getTime() > TODAY}
-                        variant="standard"
-                        required
-                      />
+                    <Grid container spacing={2}>
+                      <Grid item xs={6}>
+                        <TextInput
+                          variant="standard"
+                          label="Країна народження"
+                          name="countriOfBirth"
+                          required
+                          maxLength={10}
+                          form={form}
+                          parse={onlyLettersFirsUppercase}
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextInput
+                          variant="standard"
+                          label="Місце народження"
+                          name="placeOfBirth"
+                          required
+                          maxLength={10}
+                          form={form}
+                          parse={onlyLettersFirsUppercase}
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={4}>
-                      <SelectInput
-                        items={sexOfUser}
-                        name="sexOfUser"
-                        variant="standard"
-                        label="Cтать"
-                        values={values}
-                        required
-                      />
+                    <Grid container spacing={2}>
+                      <Grid item xs={6}>
+                        <SelectInput
+                          items={connectWay}
+                          name="connectWay"
+                          variant="standard"
+                          label="Бажаний спосіб зв'язку із пацієнтом"
+                          form={form}
+                          parentKey
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextInput
+                          variant="standard"
+                          label="Секретне слово (не менше 6 символів)"
+                          name="secretWord"
+                          required
+                          parse={onlyLetters}
+                        />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <TextInput
-                        variant="standard"
-                        label="Країна народження"
-                        name="countriOfBirth"
-                        required
-                        maxLength={10}
-                        form={form}
-                        parse={onlyLettersFirsUppercase}
-                      />
+                    <Grid container spacing={2}>
+                      <Grid item xs={6}>
+                        <PhoneInput name="phoneNumber" label="Контактний номер телефону" />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextInput
+                          variant="standard"
+                          label="Адреса електронної пошти"
+                          name="email"
+                          type="email"
+                          placeholder="examle@examle.com"
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                      <TextInput
-                        variant="standard"
-                        label="Місце народження"
-                        name="placeOfBirth"
-                        required
-                        maxLength={10}
-                        form={form}
-                        parse={onlyLettersFirsUppercase}
-                      />
+                  </Inner>
+                  <Typography mt="30px" pb="10px" variant="h5">
+                    Документ, що посвідчує особу
+                  </Typography>
+                  <Inner>
+                    <Grid container spacing={2}>
+                      <Grid item xs={6}>
+                        <SelectInput
+                          items={documentTypes}
+                          name="documentType"
+                          variant="standard"
+                          label="Тип документу"
+                          required
+                          parentKey
+                          form={form}
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextInput
+                          disabled={!parentKeys.documentType}
+                          variant="standard"
+                          label="Серія (за наявності), номер"
+                          name="seriesOfDocument"
+                          required
+                          parentKeys={parentKeys}
+                          parse={
+                            parentKeys.documentType === documentTypes[1].name
+                              ? onlyNumbers
+                              : (e) => e
+                          }
+                          maxLength={parentKeys.documentType === documentTypes[1].name ? 9 : 8}
+                        />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <SelectInput
-                        items={connectWay}
-                        name="connectWay"
-                        variant="standard"
-                        label="Бажаний спосіб зв'язку із пацієнтом"
-                        form={form}
-                        parentKey
-                      />
+                    <Grid container spacing={2}>
+                      <Grid item xs={6}>
+                        <DateInput
+                          disabled={!parentKeys.documentType}
+                          variant="standard"
+                          parentKeys={parentKeys}
+                          label="Коли видано"
+                          name="whenCreated"
+                          required
+                          shouldDisableDate={(day) => day.getTime() > TODAY}
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <DateInput
+                          disabled={!values.whenCreated || !parentKeys.documentType}
+                          name="validUntil"
+                          parentKeys={parentKeys}
+                          label="Діє до"
+                          variant="standard"
+                          shouldDisableDate={(day) =>
+                            values.whenCreated > day ||
+                            new Date(values.whenCreated).getTime() + TEN_YEARS < day
+                          }
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                      <TextInput
-                        variant="standard"
-                        label="Секретне слово (не менше 6 символів)"
-                        name="secretWord"
-                        required
-                        parse={onlyLetters}
-                      />
+                    <Grid container spacing={2}>
+                      <Grid item xs={6}>
+                        <TextInput
+                          disabled={!parentKeys.documentType}
+                          parentKeys={parentKeys}
+                          variant="standard"
+                          type="textarea"
+                          label="Ким видано"
+                          name="whoIssued"
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextInput
+                          disabled={!parentKeys.documentType}
+                          parentKeys={parentKeys}
+                          name="UNZRquery"
+                          label="Запит № (УНЗР)"
+                          variant="standard"
+                          required
+                          parse={onlyNumbers}
+                          placeholder="РРРРММДД-ХХХХХ"
+                          maxLength={13}
+                        />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <PhoneInput name="phoneNumber" label="Контактний номер телефону" />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextInput
-                        variant="standard"
-                        label="Адреса електронної пошти"
-                        name="email"
-                        type="email"
-                        placeholder="examle@examle.com"
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <SelectInput
-                        items={documentTypes}
-                        name="documentType"
-                        variant="standard"
-                        label="Тип документу"
-                        required
-                        parentKey
-                        form={form}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextInput
-                        disabled={!parentKeys.documentType}
-                        variant="standard"
-                        label="Серія (за наявності), номер"
-                        name="seriesOfDocument"
-                        required
-                        parentKeys={parentKeys}
-                        parse={
-                          parentKeys.documentType === documentTypes[1].name ? onlyNumbers : (e) => e
-                        }
-                        maxLength={parentKeys.documentType === documentTypes[1].name ? 9 : 8}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <DateInput
-                        disabled={!parentKeys.documentType}
-                        variant="standard"
-                        parentKeys={parentKeys}
-                        label="Коли видано"
-                        name="whenCreated"
-                        required
-                        shouldDisableDate={(day) => day.getTime() > TODAY}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <DateInput
-                        disabled={!values.whenCreated || !parentKeys.documentType}
-                        name="validUntil"
-                        parentKeys={parentKeys}
-                        label="Діє до"
-                        variant="standard"
-                        shouldDisableDate={(day) =>
-                          values.whenCreated > day ||
-                          new Date(values.whenCreated).getTime() + TEN_YEARS < day
-                        }
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <TextInput
-                        disabled={!parentKeys.documentType}
-                        parentKeys={parentKeys}
-                        variant="standard"
-                        type="textarea"
-                        label="Ким видано"
-                        name="whoIssued"
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextInput
-                        disabled={!parentKeys.documentType}
-                        parentKeys={parentKeys}
-                        name="UNZRquery"
-                        label="Запит № (УНЗР)"
-                        variant="standard"
-                        required
-                        parse={onlyNumbers}
-                        placeholder="РРРРММДД-ХХХХХ"
-                        maxLength={13}
-                      />
-                    </Grid>
-                  </Grid>
-
+                  </Inner>
                   <ButtonBox>
                     <Button
                       type="button"

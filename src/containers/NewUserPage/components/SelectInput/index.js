@@ -6,6 +6,7 @@ import { useLocalStorage } from '../../../../lib/hooks/useLocalStorage';
 
 const SelectInput = ({ items, name, values, parentKey, ...rest }) => {
   const [value, setValue] = useState('placeholder');
+  
   const { setPageValue: setParentKeys } = useLocalStorage({
     key: 'PARENT_KEYS',
     defaultValue: {},

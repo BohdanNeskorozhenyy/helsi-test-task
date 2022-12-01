@@ -7,6 +7,7 @@ import { useLocalStorage } from '../../../../lib/hooks/useLocalStorage';
 import { MdInfoOutline } from 'react-icons/md';
 
 const TextInput = ({ maxLength, form, name, optional, parentKeys, helperText, parse, ...rest }) => {
+
   const classes = useStyles();
   const inputRef = useRef();
 
@@ -31,6 +32,7 @@ const TextInput = ({ maxLength, form, name, optional, parentKeys, helperText, pa
   const onChange = () => {
     setRequired((required) => !required);
   };
+  
   const isDispabled = optional && !newUserFormRequireds[name];
 
   return (

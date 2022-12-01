@@ -4,7 +4,6 @@ import { useStyles, Container } from './styles';
 
 const DateInput = ({ name, variant, parentKeys, ...rest }) => {
   const classes = useStyles();
-  console.log('reremder date');
   return (
     <Container>
       <DatePicker
