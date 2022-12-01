@@ -301,7 +301,10 @@ export function NewUserPage() {
                     <Button
                       type="button"
                       variant="contained"
-                      onClick={() => form.restart()}
+                      onClick={() => {
+                        form.restart();
+                        setParentKeys({});
+                      }}
                       disabled={submitting || pristine}
                     >
                       Reset
