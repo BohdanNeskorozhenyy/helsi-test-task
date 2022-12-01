@@ -1,36 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Switch from '@mui/material/Switch';
 import { useStyles, Container, Absolute, Wraper } from './styles';
 import { TextField } from 'mui-rff';
-import { makeStyles } from '@material-ui/styles';
 import { Field } from 'react-final-form';
 import { useLocalStorage } from '../../../../lib/hooks/useLocalStorage';
 import { MdInfoOutline } from 'react-icons/md';
 
-export const TextInput = ({ maxLength, form, name, optional, helperText, parse, ...rest }) => {
+const TextInput = ({ maxLength, form, name, optional, parentKeys, helperText, parse, ...rest }) => {
   const classes = useStyles();
+  const inputRef = useRef();
 
   const { pageValue: newUserFormRequireds, setPageValue: setNewUserFormRequireds } =
     useLocalStorage({
       key: 'NEW_USER_FORM_REQUIREDS',
-      defaultValue: {},
+      defaultValue: { name: true },
     });
 
-  const [required, setRequired] = useState(newUserFormRequireds[name]);
+  const [required, setRequired] = useState(
+    typeof newUserFormRequireds[name] === 'undefined' ? false : newUserFormRequireds[name],
+  );
 
   useEffect(() => {
     setNewUserFormRequireds({
       ...newUserFormRequireds,
       [name]: required,
     });
+    inputRef.current.value && form.change(name, '');
   }, [required]);
 
   const onChange = () => {
-    form.change(name, '');
     setRequired((required) => !required);
   };
-
   const isDispabled = optional && !newUserFormRequireds[name];
+
   return (
     <Container>
       <Field parse={parse} name={name}>
@@ -38,6 +40,7 @@ export const TextInput = ({ maxLength, form, name, optional, helperText, parse, 
           return (
             <Wraper optional={optional}>
               <TextField
+                inputRef={inputRef}
                 className={classes.root}
                 disabled={isDispabled}
                 helperText={isDispabled && helperText}
@@ -58,3 +61,5 @@ export const TextInput = ({ maxLength, form, name, optional, helperText, parse, 
     </Container>
   );
 };
+
+export default React.memo(TextInput, (prev, next) => prev.parentKeys === next.parentKeys);

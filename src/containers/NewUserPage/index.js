@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+
 import { Form } from 'react-final-form';
-import { Checkboxes, Radios, Select, DatePicker, TimePicker } from 'mui-rff';
-import { Grid, Button, CssBaseline } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 import { Paper, Container, ButtonBox } from './styles';
-import { TextInput } from './components/TextInput';
-import { DateInput } from './components/DateInput';
+
+import TextInput from './components/TextInput';
+import DateInput from './components/DateInput';
+import SelectInput from './components/SelectInput';
 import { useUserValidation } from './validation';
-import { onlyNumbers, onlyLetters } from './validation';
+import PhoneInput from './components/PhoneInput';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, ukUA } from '@mui/x-date-pickers';
 import ukLocale from 'date-fns/locale/uk';
+
+import { sexOfUser, connectWay, documentTypes } from './constants';
+import { onlyNumbers, onlyLettersFirsUppercase, onlyLetters } from './validation';
+
+import { useLocalStorage } from '../../lib/hooks/useLocalStorage';
 
 const onSubmit = async (values) => {
   alert(JSON.stringify(values, 0, 2));
@@ -18,6 +25,19 @@ const onSubmit = async (values) => {
 
 export function NewUserPage() {
   const validate = useUserValidation();
+
+  const { pageValue: parentKeys, setPageValue: setParentKeys } = useLocalStorage({
+    key: 'PARENT_KEYS',
+    defaultValue: {},
+  });
+
+  useEffect(() => {
+    setParentKeys({});
+  }, []);
+
+  const TODAY = new Date().getTime();
+  const TEN_YEARS = 315569259747;
+
   return (
     <LocalizationProvider
       dateAdapter={AdapterDateFns}
@@ -25,17 +45,15 @@ export function NewUserPage() {
       localeText={ukUA.components.MuiLocalizationProvider.defaultProps.localeText}
     >
       <Container>
-        <CssBaseline />
         <Form
           onSubmit={onSubmit}
           validate={validate}
-          render={({ handleSubmit, submitting, pristine, values, form }) => {
+          render={({ handleSubmit, submitting, pristine, values, form, valid }) => {
             return (
               <form
                 noValidate
                 onSubmit={(event) => {
-                  const isValid = form.getState().valid;
-                  isValid
+                  valid
                     ? handleSubmit(event).then(() => {
                         form.restart();
                       })
@@ -49,7 +67,7 @@ export function NewUserPage() {
                         variant="standard"
                         label="Прізвище"
                         name="secondName"
-                        parse={onlyLetters}
+                        parse={onlyLettersFirsUppercase}
                         required
                       />
                     </Grid>
@@ -59,7 +77,7 @@ export function NewUserPage() {
                         variant="standard"
                         label="Ім'я"
                         name="firstName"
-                        parse={onlyLetters}
+                        parse={onlyLettersFirsUppercase}
                         required
                       />
                     </Grid>
@@ -72,7 +90,7 @@ export function NewUserPage() {
                         helperText="Немає по батькові згідно документів"
                         name="middleName"
                         required
-                        parse={onlyLetters}
+                        parse={onlyLettersFirsUppercase}
                         form={form}
                       />
                     </Grid>
@@ -95,11 +113,161 @@ export function NewUserPage() {
                       <DateInput
                         name="dateOfBirth"
                         label="Дата народження"
+                        shouldDisableDate={(day) => day.getTime() > TODAY}
                         variant="standard"
                         required
                       />
                     </Grid>
+                    <Grid item xs={4}>
+                      <SelectInput
+                        items={sexOfUser}
+                        name="sexOfUser"
+                        variant="standard"
+                        label="Cтать"
+                        values={values}
+                        required
+                      />
+                    </Grid>
                   </Grid>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <TextInput
+                        variant="standard"
+                        label="Країна народження"
+                        name="countriOfBirth"
+                        required
+                        maxLength={10}
+                        form={form}
+                        parse={onlyLettersFirsUppercase}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextInput
+                        variant="standard"
+                        label="Місце народження"
+                        name="placeOfBirth"
+                        required
+                        maxLength={10}
+                        form={form}
+                        parse={onlyLettersFirsUppercase}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <SelectInput
+                        items={connectWay}
+                        name="connectWay"
+                        variant="standard"
+                        label="Бажаний спосіб зв'язку із пацієнтом"
+                        form={form}
+                        parentKey
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextInput
+                        variant="standard"
+                        label="Секретне слово (не менше 6 символів)"
+                        name="secretWord"
+                        required
+                        parse={onlyLetters}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <PhoneInput name="phoneNumber" label="Контактний номер телефону" />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextInput
+                        variant="standard"
+                        label="Адреса електронної пошти"
+                        name="email"
+                        type="email"
+                        placeholder="examle@examle.com"
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <SelectInput
+                        items={documentTypes}
+                        name="documentType"
+                        variant="standard"
+                        label="Тип документу"
+                        required
+                        parentKey
+                        form={form}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextInput
+                        disabled={!parentKeys.documentType}
+                        variant="standard"
+                        label="Серія (за наявності), номер"
+                        name="seriesOfDocument"
+                        required
+                        parentKeys={parentKeys}
+                        parse={
+                          parentKeys.documentType === documentTypes[1].name ? onlyNumbers : (e) => e
+                        }
+                        maxLength={parentKeys.documentType === documentTypes[1].name ? 9 : 8}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <DateInput
+                        disabled={!parentKeys.documentType}
+                        variant="standard"
+                        parentKeys={parentKeys}
+                        label="Коли видано"
+                        name="whenCreated"
+                        required
+                        shouldDisableDate={(day) => day.getTime() > TODAY}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <DateInput
+                        disabled={!values.whenCreated || !parentKeys.documentType}
+                        name="validUntil"
+                        parentKeys={parentKeys}
+                        label="Діє до"
+                        variant="standard"
+                        shouldDisableDate={(day) =>
+                          values.whenCreated > day ||
+                          new Date(values.whenCreated).getTime() + TEN_YEARS < day
+                        }
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <TextInput
+                        disabled={!parentKeys.documentType}
+                        parentKeys={parentKeys}
+                        variant="standard"
+                        type="textarea"
+                        label="Ким видано"
+                        name="whoIssued"
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextInput
+                        disabled={!parentKeys.documentType}
+                        parentKeys={parentKeys}
+                        name="UNZRquery"
+                        label="Запит № (УНЗР)"
+                        variant="standard"
+                        required
+                        parse={onlyNumbers}
+                        placeholder="РРРРММДД-ХХХХХ"
+                        maxLength={13}
+                      />
+                    </Grid>
+                  </Grid>
+
                   <ButtonBox>
                     <Button
                       type="button"

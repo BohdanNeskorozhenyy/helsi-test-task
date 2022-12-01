@@ -1,20 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { DatePicker } from 'mui-rff';
 import { useStyles, Container } from './styles';
 
-export const DateInput = ({ name, variant, ...rest }) => {
+const DateInput = ({ name, variant, parentKeys, ...rest }) => {
   const classes = useStyles();
+  console.log('reremder date');
   return (
     <Container>
       <DatePicker
         className={classes.root}
         required
-        toolbarPlaceholder="1231231"
         name={name}
         {...rest}
-        variant="inline"
         TextFieldProps={{ variant }}
       />
     </Container>
   );
 };
+
+export default React.memo(
+  DateInput,
+  (prev, next) => prev.parentKeys === next.parentKeys || prev.disabled === next.disabled,
+);
