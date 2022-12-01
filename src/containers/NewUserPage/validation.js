@@ -65,11 +65,13 @@ export const useUserValidation = () => {
             .required(FIELD_IS_REQUIRED)
             .matches(/[A-Z]{2}[0-9]{6}|[А-Я]{2}[0-9]{6}/, BOOK_PASSWORD_ERROR);
         default:
-          return yup.string().required(FIELD_IS_REQUIRED).min(9, TO_SHORT(9));;
+          return yup.string().required(FIELD_IS_REQUIRED).min(9, TO_SHORT(9));
       }
     }),
     whoIssued: yup.string().required(FIELD_IS_REQUIRED).min(10, TO_SHORT(10)),
     UNZRquery: yup.string().required(FIELD_IS_REQUIRED).min(13, TO_SHORT(13)),
+    validUntil: yup.date().required(FIELD_IS_REQUIRED),
+    whenCreated: yup.date().required(FIELD_IS_REQUIRED),
   });
 
   const validate = validateFormValues(validationSchema);
