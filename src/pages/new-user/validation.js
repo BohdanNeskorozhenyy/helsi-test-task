@@ -8,7 +8,7 @@ import {
   NUMBER_ERROR,
   BOOK_PASSWORD_ERROR,
   EMAIL_ERROR,
-} from '../../constants/validationConstants';
+} from '../../constants/validation-messages';
 import { documentTypes } from './constants';
 
 export const useUserValidation = () => {

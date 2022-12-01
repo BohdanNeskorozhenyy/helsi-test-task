@@ -1,5 +1,5 @@
 import React from 'react';
-import { NewUserPage } from '../NewUserPage/index';
+import { NewUserPage } from '../../pages/new-user/index';
 
 function App() {
   return (
