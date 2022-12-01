@@ -174,6 +174,7 @@ export function NewUserPage() {
                           label="Бажаний спосіб зв'язку із пацієнтом"
                           form={form}
                           parentKey
+                          values={values}
                         />
                       </Grid>
                       <Grid item xs={6}>
@@ -214,6 +215,7 @@ export function NewUserPage() {
                           label="Тип документу"
                           required
                           parentKey
+                          values={values}
                           form={form}
                         />
                       </Grid>
