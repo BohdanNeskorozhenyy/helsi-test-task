@@ -63,7 +63,7 @@ export function NewUserPage() {
                 }}
               >
                 <Header>
-                  <BackButton type='button'>
+                  <BackButton type="button">
                     <MdKeyboardBackspace />
                   </BackButton>
                   <Typography variant="h5">Створення персони</Typography>
@@ -230,7 +230,7 @@ export function NewUserPage() {
                               ? onlyNumbers
                               : (e) => e
                           }
-                          maxLength={parentKeys.documentType === documentTypes[1].name ? 9 : 8}
+                          maxLength={parentKeys.documentType === documentTypes[2].name ? 8 : 9}
                         />
                       </Grid>
                     </Grid>
@@ -280,6 +280,7 @@ export function NewUserPage() {
                           label="Запит № (УНЗР)"
                           variant="standard"
                           required
+                          helperText="Вкажіть унікальний номер запису в Демографічному реєстрі (Запис №)"
                           parse={onlyNumbers}
                           placeholder="РРРРММДД-ХХХХХ"
                           maxLength={13}

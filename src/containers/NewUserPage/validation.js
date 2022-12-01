@@ -55,13 +55,18 @@ export const useUserValidation = () => {
     phoneNumber: yup.string().min(19, NUMBER_ERROR),
     email: yup.string().email(EMAIL_ERROR),
     documentType: yup.string().required(FIELD_IS_REQUIRED),
-    seriesOfDocument: yup.string().when([], {
-      is: () => parentKeys.documentType === documentTypes[1].name,
-      then: yup.string().required(FIELD_IS_REQUIRED).min(9, TO_SHORT(9)),
-      otherwise: yup
-        .string()
-        .required()
-        .matches(/[A-Z]{2}[0-9]{6}|[А-Я]{2}[0-9]{6}/, BOOK_PASSWORD_ERROR),
+    seriesOfDocument: yup.lazy(() => {
+      switch (parentKeys.documentType) {
+        case documentTypes[1].name:
+          return yup.string().required(FIELD_IS_REQUIRED).min(9, TO_SHORT(9));
+        case documentTypes[2].name:
+          return yup
+            .string()
+            .required(FIELD_IS_REQUIRED)
+            .matches(/[A-Z]{2}[0-9]{6}|[А-Я]{2}[0-9]{6}/, BOOK_PASSWORD_ERROR);
+        default:
+          return yup.string().required(FIELD_IS_REQUIRED).min(9, TO_SHORT(9));;
+      }
     }),
     whoIssued: yup.string().required(FIELD_IS_REQUIRED).min(10, TO_SHORT(10)),
     UNZRquery: yup.string().required(FIELD_IS_REQUIRED).min(13, TO_SHORT(13)),
@@ -71,7 +76,6 @@ export const useUserValidation = () => {
 
   return validate;
 };
-
 
 export const onlyNumbers = (value) => value.replace(/\D/gi, '');
 
