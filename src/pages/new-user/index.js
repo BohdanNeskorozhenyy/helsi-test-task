@@ -32,9 +32,15 @@ export function NewUserPage() {
     key: 'PARENT_KEYS',
     defaultValue: {},
   });
+  
+  const { setPageValue: setNewUserFormRequireds } = useLocalStorage({
+    key: 'NEW_USER_FORM_REQUIREDS',
+    defaultValue: {},
+  });
 
   useEffect(() => {
     setParentKeys({});
+    setNewUserFormRequireds({});
   }, []);
 
   const TODAY = new Date().getTime();

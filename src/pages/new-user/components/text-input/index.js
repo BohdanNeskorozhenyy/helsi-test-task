@@ -22,12 +22,10 @@ const TextInput = ({
   const { pageValue: newUserFormRequireds, setPageValue: setNewUserFormRequireds } =
     useLocalStorage({
       key: 'NEW_USER_FORM_REQUIREDS',
-      defaultValue: { name: true },
+      defaultValue: {},
     });
 
-  const [required, setRequired] = useState(
-    typeof newUserFormRequireds[name] === 'undefined' ? false : newUserFormRequireds[name],
-  );
+  const [required, setRequired] = useState(false);
 
   useEffect(() => {
     setNewUserFormRequireds({
