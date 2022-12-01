@@ -32,7 +32,7 @@ export function NewUserPage() {
     key: 'PARENT_KEYS',
     defaultValue: {},
   });
-  
+
   const { setPageValue: setNewUserFormRequireds } = useLocalStorage({
     key: 'NEW_USER_FORM_REQUIREDS',
     defaultValue: {},
@@ -227,7 +227,7 @@ export function NewUserPage() {
                       </Grid>
                       <Grid item xs={6}>
                         <TextInput
-                          disabled={!parentKeys.documentType}
+                          disabled={!values.documentType}
                           variant="standard"
                           label="Серія (за наявності), номер"
                           name="seriesOfDocument"
@@ -239,7 +239,7 @@ export function NewUserPage() {
                               : (e) => e
                           }
                           maxLength={(() => {
-                            switch (parentKeys.documentType) {
+                            switch (values.documentType) {
                               case documentTypes[2].name:
                                 return 9;
                               case documentTypes[3].name:
@@ -254,7 +254,7 @@ export function NewUserPage() {
                     <Grid container spacing={2}>
                       <Grid item xs={6}>
                         <DateInput
-                          disabled={!parentKeys.documentType}
+                          disabled={!values.documentType}
                           variant="standard"
                           parentKeys={parentKeys}
                           label="Коли видано"
@@ -265,7 +265,7 @@ export function NewUserPage() {
                       </Grid>
                       <Grid item xs={6}>
                         <DateInput
-                          disabled={!values.whenCreated || !parentKeys.documentType}
+                          disabled={!values.whenCreated || !values.documentType}
                           name="validUntil"
                           parentKeys={parentKeys}
                           label="Діє до"
@@ -280,7 +280,7 @@ export function NewUserPage() {
                     <Grid container spacing={2}>
                       <Grid item xs={6}>
                         <TextInput
-                          disabled={!parentKeys.documentType}
+                          disabled={!values.documentType}
                           parentKeys={parentKeys}
                           variant="standard"
                           type="textarea"
@@ -291,7 +291,7 @@ export function NewUserPage() {
                       </Grid>
                       <Grid item xs={6}>
                         <TextInput
-                          disabled={!parentKeys.documentType}
+                          disabled={!values.documentType}
                           parentKeys={parentKeys}
                           name="UNZRquery"
                           label="Запит № (УНЗР)"
